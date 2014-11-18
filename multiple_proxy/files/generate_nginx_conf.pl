@@ -56,6 +56,7 @@ my $body = <<"EOS";
     server{
         listen 80;
         server_name %s;
+        client_max_body_size 200M;
 
         location / {
             proxy_pass http://%s;
