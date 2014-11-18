@@ -1,7 +1,8 @@
 FROM dockerfile/nginx
 
 RUN \
-  rm /var/log/nginx/ &&\
+  rm -rf /var/log/nginx/ &&\
+  mkdir -p /var/log/nginx/ &&\
   ln -sf /dev/stdout /var/log/nginx/access.log &&\
   ln -sf /dev/stderr /var/log/nginx/error.log
 
