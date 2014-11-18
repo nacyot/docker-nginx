@@ -56,6 +56,12 @@ my $body = <<"EOS";
         location / {
             proxy_pass http://%s;
         }
+
+        location = /health.html {
+            empty_gif;
+            access_log off;
+            break;
+        }
     }
 EOS
 
