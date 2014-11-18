@@ -66,6 +66,17 @@ my $body = <<"EOS";
 EOS
 
 my $footer = <<"EOS";
+
+    server{
+        listen 80;
+
+        location = /health.html {
+            empty_gif;
+            access_log off;
+            break;
+        }
+    }
+
 }
 
 daemon off;
