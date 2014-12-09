@@ -67,7 +67,21 @@ my $body = <<"EOS";
             access_log off;
             break;
         }
-    }
+EOS
+
+my $websocket = <<"EOS";
+        location = %s {
+            proxy_set_header X-Real-IP \$remote_addr;
+            proxy_set_header X-Forwarded-For \$remote_addr;
+            proxy_set_header Host \$http_host;
+        
+            proxy_pass http://%s;
+            proxy_redirect off;
+        
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
 EOS
 
 my $footer = <<"EOS";
@@ -98,8 +112,17 @@ while($ENV{$target} ne ''){
            $ENV{'PROXY_HOST_'.$num}, 
            $ENV{'PROXY_PORT_'.$num}, 
            $ENV{'PROXY_DOMAIN_'.$num}, 
-           $ENV{'PROXY_NAME_'.$num});
-    
+           $ENV{'PROXY_NAME_'.$num}
+          );
+
+    if($ENV{'PROXY_WS_LOC_'.$num} ne ''){
+      printf($fh $websocket."\n",
+             $ENV{'PROXY_WS_LOC_'.$num},
+             $ENV{'PROXY_NAME_'.$num}
+            );
+    }
+
+    printf($fh "\n    }\n");
     $num += 1;
     $target = 'PROXY_DOMAIN_'.$num;
 }
